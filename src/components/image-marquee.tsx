@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Marquee } from "@/components/magicui/marquee";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const reviews = [
   {
@@ -46,8 +46,6 @@ const secondRow = reviews.slice(reviews.length / 2);
 
 const ReviewCard = ({
   img,
-  name,
-  username,
   body,
 }: {
   img: string;
