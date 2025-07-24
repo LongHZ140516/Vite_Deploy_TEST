@@ -1,60 +1,9 @@
 import { cn } from "@/lib/utils";
 import { Marquee } from "@/components/magicui/marquee";
+import { ArrowLeft, ArrowRight, X } from 'lucide-react';
 import { useState } from "react";
 
-const reviews = [
-  {
-    name: "Jack",
-    username: "@jack",
-    body: "I've never seen anything like this before. It's amazing. I love it.",
-    img: "./images/0.png",
-  },
-  {
-    name: "Jill",
-    username: "@jill",
-    body: "I don't know what to say. I'm speechless. This is amazing.",
-    img: "./images/0.png",
-  },
-  {
-    name: "John",
-    username: "@john",
-    body: "I'm at a loss for words. This is amazing. I love it.",
-    img: "./images/0.png",
-  },
-  {
-    name: "Jane",
-    username: "@jane",
-    body: "I'm at a loss for words. This is amazing. I love it.",
-    img: "./images/0.png",
-  },
-  {
-    name: "Jenny",
-    username: "@jenny",
-    body: "I'm at a loss for words. This is amazing. I love it.",
-    img: "./images/0.png",
-  },
-  {
-    name: "James",
-    username: "@james",
-    body: "I'm at a loss for words. This is amazing. I love it.",
-    img: "./images/0.png",
-  },
-];
-
-const firstRow = reviews.slice(0, reviews.length / 2);
-const secondRow = reviews.slice(reviews.length / 2);
-
-const ReviewCard = ({
-  img,
-  body,
-}: {
-  img: string;
-  name: string;
-  username: string;
-  body: string;
-}) => {
-  const [hovered, setHovered] = useState(false);
-
+const ReviewCard = ({ img, onClick }: { img: string; onClick: () => void }) => {
   return (
     <figure
       className={cn(
@@ -63,42 +12,74 @@ const ReviewCard = ({
         "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
         // dark styles
         "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]",
+        "hover:-translate-y-2 transition-transform duration-200"
       )}
+      onClick={onClick}
     >
-      <div
-        className="relative"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-      >
-        <img className="rounded-2xl cursor-pointer" width="100%" height="100%" alt="" src={img} />
-        <div
-          className={`absolute inset-0 flex items-center justify-center bg-black/60 text-white text-center px-2 transition-opacity duration-200 rounded-2xl ${
-            hovered ? "opacity-100" : "opacity-0"
-          }`}
-          style={{ fontSize: 16, fontWeight: 500, pointerEvents: "none" }}
-        >
-          {body}
-        </div>
-      </div>
+      <img className="rounded-2xl cursor-pointer" width="100%" height="100%" alt="" src={img} />
     </figure>
   );
 };
 
-export function ImageMarquee() {
+export function ImageMarquee({ images }: { images: string[] }) {
+  const [zoomIndex, setZoomIndex] = useState<number | null>(null);
+  const firstRow = images.slice(0, images.length / 2);
+  // const secondRow = images.slice(images.length / 2);
+
   return (
     <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
       <Marquee pauseOnHover className="[--duration:20s]">
-        {firstRow.map((review) => (
-          <ReviewCard key={review.username} {...review} />
+        {firstRow.map((img, idx) => (
+          <ReviewCard key={img} img={img} onClick={() => setZoomIndex(idx)} />
         ))}
       </Marquee>
-      <Marquee reverse pauseOnHover className="[--duration:20s]">
-        {secondRow.map((review) => (
-          <ReviewCard key={review.username} {...review} />
+      {/* <Marquee reverse pauseOnHover className="[--duration:20s]">
+        {secondRow.map((img, idx) => (
+          <ReviewCard key={img} img={img} onClick={() => setZoomIndex(idx + firstRow.length)} />
         ))}
-      </Marquee>
+      </Marquee> */}
       {/* <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-background"></div>
       <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-background"></div> */}
+      {zoomIndex !== null && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
+          onClick={() => setZoomIndex(null)}
+        >
+          <button
+            className="absolute left-[7vw] text-3xl text-white bg-black/40 rounded-full px-3 py-1 hover:bg-white/40"
+            onClick={e => {
+              e.stopPropagation();
+              setZoomIndex((zoomIndex - 1 + firstRow.length) % firstRow.length);
+            }}
+          >
+            <ArrowLeft className="size-10"/>
+          </button>
+          <img
+            src={firstRow[zoomIndex]}
+            alt="zoomed"
+            className="max-w-[90vw] max-h-[90vh] rounded-2xl shadow-2xl border-4 border-white transition-transform duration-300 scale-100"
+            onClick={e => e.stopPropagation()}
+          />
+          <button
+            className="absolute right-[7vw] text-3xl text-white bg-black/40 rounded-full px-3 py-1 hover:bg-white/40"
+            onClick={e => {
+              e.stopPropagation();
+              setZoomIndex((zoomIndex + 1) % firstRow.length);
+            }}
+          >
+            <ArrowRight className="size-10"/>
+          </button>
+          <button
+            className="absolute top-8 right-8 text-2xl text-white bg-black/40 rounded-full px-3 py-1 hover:bg-white/40"
+            onClick={e => {
+              e.stopPropagation();
+              setZoomIndex(null);
+            }}
+          >
+            <X className="size-10"/>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
