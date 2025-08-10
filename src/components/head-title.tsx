@@ -4,9 +4,12 @@ import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button
 
 export function TitleReveal() {
   return (
-    <div className="z-20 max-w-4lg items-center justify-center overflow-hidden mt-[-10vw]">
+    <div className="z-20 max-w-4lg items-center justify-center overflow-hidden mt-[-13vw]">
+      <div className="flex items-center justify-center">
+        <img src="./logo.png" alt="logo" className="w-50 h-50" />
+      </div>
       <BoxReveal boxColor={"#6D83F2"} duration={0.5}>
-        <h1 className="text-[5rem] font-semibold text-[#F8F8F8]">
+        <h1 className="flex text-[5rem] font-semibold text-[#F8F8F8]">
         Echo-4o-Image<span className="text-[#6A98F0]">.</span>
         </h1>
       </BoxReveal>
