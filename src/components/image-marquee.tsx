@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Marquee } from "@/components/magicui/marquee";
+import { Marquee } from "@/components/ui/marquee";
 import { ArrowLeft, ArrowRight, X } from 'lucide-react';
 import { useState } from "react";
 
@@ -16,7 +16,14 @@ const ReviewCard = ({ img, onClick }: { img: string; onClick: () => void }) => {
       )}
       onClick={onClick}
     >
-      <img className="rounded-2xl cursor-pointer" width="100%" height="100%" alt="" src={img} />
+      {/* <img className="rounded-2xl cursor-pointer" width="100%" height="512px" alt="" src={img} /> */}
+      <img 
+        className="rounded-2xl cursor-pointer object-cover"
+        style={{ height: 'auto', width: '512px' }}  // 更小的显示尺寸
+        loading="lazy"  // 懒加载
+        alt="" 
+        src={img} 
+      />
     </figure>
   );
 };
